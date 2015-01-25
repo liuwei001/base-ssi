@@ -1,0 +1,40 @@
+<project basedir="." name="commons-daf" default="builall">
+	<property file="build.properties" />
+	<path id="build.classpath">
+		<fileset dir="${app.lib}">
+			<include name="**/*.jar" />
+		</fileset>	
+		<fileset dir="${servlet.lib}">
+			<include name="**/*.jar" />
+		</fileset>			
+	</path>
+	<target name="clean">
+		<delete dir="${app.build}" />
+		<delete dir="${app.assemble}" />
+		<mkdir dir="${app.common.ssi.build.classesdir}" />
+		<mkdir dir="${app.assemble}" />
+	</target>
+	<target name="compile_commons-ssi">
+		<javac destdir="${app.common.ssi.build.classesdir}" includes="**" srcdir="${app.common.ssi.java}" optimize="${compile.optimize}" debug="${compile.debug}" encoding="${compile.encoding}" deprecation="${compile.deprecation}">
+			<classpath refid="build.classpath" />
+			<classpath path="${app.ssi.build.classesdir}" />
+		</javac>
+		<copy todir="${app.common.ssi.build.classesdir}" overwrite="true">
+			<fileset dir="${app.common.ssi.java}">
+				<exclude name="**/*.java" />
+				<exclude name="**/*.src" />
+				<exclude name="**/*.svn" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="build_common_ssi" depends="compile_commons-ssi" description="Create binary distribution">
+		<jar jarfile="${app.assemble}/${app.common.ssi.jarname}" basedir="${app.common.ssi.build.classesdir}" />
+	</target>
+	
+	<target name="builall" depends="clean,build_common_ssi" description="Create binary distribution">
+		<delete dir="${app.build}" />
+
+	</target>
+	
+</project>

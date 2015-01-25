@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+
+	<constant name="struts.devMode" value="true" />
+	<!--constant name="struts.objectFactory" value="spring" /-->
+	<constant name="struts.custom.i18n.resources"
+		value="
+	          ApplicationResources,
+			  ApplicationResources_AdminManage, 
+			  ApplicationResources_RoleManage, 
+			  ApplicationResources_LogManage, 
+			  ApplicationResources_MessageManage,
+			  ApplicationResources_WebManage,
+			  ApplicationResources_Publish,
+			  ApplicationResources_ResourceManage,
+			  ApplicationResources_Template,
+			  ApplicationResources_CommonTemplate,
+			  ApplicationResources_Plugin,
+			  ApplicationResources_Category,
+			  ApplicationResources_SiteManage,
+			  ApplicationResources_IepgParameterManage,
+			  ApplicationResources_widgetManage,
+			  ApplicationResources_IepgParameterManage,
+			  ApplicationResources_Product,
+			  ApplicationResources_DirectoryManage
+			  " />
+
+	<include file="struts-default.xml" />
+	<include file="struts-plugin.xml" />
+
+	<package name="defaults" extends="struts-default">
+		<result-types>
+			<result-type name="json" class="org.apache.struts2.json.JSONResult"
+				default="false" />
+		</result-types>
+
+		<interceptors>
+			<!-- 日志拦截器 -->
+			<interceptor name="logInterceptor"
+				class="com.whty.base.ssi.web.interceptor.LogInterceptor">
+				<param name="includeParams">查询,查找</param>
+			</interceptor>
+			
+			<interceptor name="json"
+				class="org.apache.struts2.json.JSONInterceptor" />
+
+			<!-- 防止重复提交拦截器 -->
+			<interceptor name="ExTokenInterceptor"
+				class="com.coship.dhm.portalMS.base.web.interceptor.ExTokenInterceptor" />
+			<!-- 自定义拦截栈 -->
+			<interceptor-stack name="ssiInterceptorStack">
+				<!--interceptor-ref name="logInterceptor" />
+				<interceptor-ref name="fileUploadStack" />
+				<interceptor-ref name="json" />
+				<interceptor-ref name="i18n" />
+				<interceptor-ref name="validation">
+					<param name="excludeMethods">input,back,cancel,browse</param>
+				</interceptor-ref>
+				<interceptor-ref name="ExTokenInterceptor" /-->
+			</interceptor-stack>
+		</interceptors>
+		<!-- 覆盖默认的拦截栈 -->
+		<default-interceptor-ref name="ssiInterceptorStack" />
+		<!-- 全局错误页面配置 -->
+		<global-results>
+			<result name="global.error">/common/error.jsp</result>
+			<result name="global.error.window">/common/error_window.jsp</result>
+		</global-results>
+	</package>
+
+	<!-- 系统管理 -->
+	<!--include file="struts/sysmanage.xml" /-->
+
+</struts>
